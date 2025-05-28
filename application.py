@@ -8,6 +8,7 @@ from datetime import datetime
 import csv
 from io import StringIO
 from collections import defaultdict
+import requests
 
 
 application = Flask(__name__)
@@ -89,6 +90,7 @@ class LoginForm(FlaskForm):
 class TransactionForm(FlaskForm):
     csrf_token = HiddenField()
 
+LAMBDA_URL = 'https://sz5q7zsy4rts3uxadijbmivlfu0krnkt.lambda-url.eu-west-1.on.aws/'
 # --- Routes ---
 @application.route('/register', methods=["GET", "POST"])
 def register():
@@ -107,8 +109,23 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
-        flash("Registration successful!", "success")
+
+        # Lambda-Funktion triggern (E-Mail senden)
+        try:
+            payload = {
+                "email": form.email.data,
+                "name": form.username.data
+            }
+            response = requests.post(LAMBDA_URL, json=payload)
+            if response.status_code == 200:
+                flash("Registration successful! Welcome email sent.", "success")
+            else:
+                flash("Registration successful! But email could not be sent.", "warning")
+        except Exception as e:
+            flash(f"Registration successful! Error sending email: {str(e)}", "warning")
+
         return redirect(url_for('login'))
+
     return render_template('register.html', form=form)
 
 
