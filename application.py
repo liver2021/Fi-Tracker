@@ -90,7 +90,7 @@ class LoginForm(FlaskForm):
 class TransactionForm(FlaskForm):
     csrf_token = HiddenField()
 
-LAMBDA_URL = 'https://sz5q7zsy4rts3uxadijbmivlfu0krnkt.lambda-url.eu-west-1.on.aws/'
+LAMBDA_URL = 'https://98kf79tqmd.execute-api.eu-west-1.amazonaws.com/default/send-email'
 # --- Routes ---
 @application.route('/register', methods=["GET", "POST"])
 def register():
@@ -318,4 +318,4 @@ with application.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    application.run(debug=True)
+    application.run(debug=True,port=5001)
