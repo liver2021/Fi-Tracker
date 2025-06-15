@@ -120,7 +120,7 @@ def register():
             if response.status_code == 200:
                 flash("Registration successful! Welcome email sent.", "success")
             else:
-                flash("Registration successful! But email could not be sent.", "warning")
+                flash("Registration successful! But email could not be send.", "warning")
         except Exception as e:
             flash(f"Registration successful! Error sending email: {str(e)}", "warning")
 
